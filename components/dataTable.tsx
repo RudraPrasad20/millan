@@ -33,7 +33,7 @@ import { Details } from "./details";
 import { columns } from "./columns";
 import axios from "axios";
 import { useEffect } from "react";
-import Loading from "./loading";
+import LoadingData from "./loadingData";
 
 
 export function DataTable() {
@@ -158,7 +158,7 @@ export function DataTable() {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  <Loading/>
+                  <LoadingData/>
                 </TableCell>
               </TableRow>
             )}

@@ -29,8 +29,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { payments } from "./payments";
+import { Details } from "./details";
 import { columns } from "./columns";
+import axios from "axios";
+import { useEffect } from "react";
+import Loading from "./loading";
+
 
 export function DataTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -44,9 +48,16 @@ export function DataTable() {
     pageIndex: 0,
     pageSize: 10,
   });
+  const [data, setData] = React.useState<Details[]>([]);
+
+  useEffect(() => {
+    axios.get("/api/data")
+      .then(res => setData(res.data))
+      .catch(err => console.error(err));
+  }, []);
 
   const table = useReactTable({
-    data: payments,
+    data,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -147,7 +158,7 @@ export function DataTable() {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No Payments Found
+                  <Loading/>
                 </TableCell>
               </TableRow>
             )}

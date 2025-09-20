@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -30,7 +31,7 @@ const formSchema = z.object({
   email: z.email().min(5, {
     message: "Email must be at least 2 characters.",
   }),
-  walletAddress: z.base64().min(44, {
+  wallet: z.base64().min(44, {
     message: "Enter a valid Wallet Address.",
   }),
   amount: z.string().min(2, {
@@ -46,17 +47,16 @@ export function CreateForm() {
     defaultValues: {
       name: "",
       email: "",
-      walletAddress: "",
+      wallet: "",
       amount: "",
       details: "",
     },
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const res = await axios.post("/api/create", values);
+    console.log("response", res);
   }
 
   return (
@@ -96,7 +96,7 @@ export function CreateForm() {
             />
             <FormField
               control={form.control}
-              name="walletAddress"
+              name="wallet"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Wallet Address</FormLabel>

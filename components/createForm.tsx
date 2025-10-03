@@ -21,7 +21,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import axios from "axios";
 
 const formSchema = z.object({
@@ -31,10 +31,10 @@ const formSchema = z.object({
   email: z.email().min(5, {
     message: "Email must be at least 2 characters.",
   }),
-  wallet: z.base64().min(44, {
+  wallet: z.string().min(44, {
     message: "Enter a valid Wallet Address.",
   }),
-  amount: z.string().min(2, {
+  amount: z.string().min(1, {
     message: "Amount.",
   }),
   details: z.string().optional(),
@@ -57,6 +57,7 @@ export function CreateForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const res = await axios.post("/api/create", values);
     console.log("response", res);
+    redirect("/data")
   }
 
   return (
@@ -125,7 +126,7 @@ export function CreateForm() {
               name="details"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>Description(optional)</FormLabel>
                   <FormControl>
                     <Input placeholder="For Bulk Deal" {...field} />
                   </FormControl>

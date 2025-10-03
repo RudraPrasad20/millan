@@ -35,8 +35,12 @@ import axios from "axios";
 import { useEffect } from "react";
 import LoadingData from "./loadingData";
 
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { sendBulkSOL } from "./bulk";
 
 export function DataTable() {
+  const { publicKey, sendTransaction } = useWallet();
+  const { connection } = useConnection();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -88,6 +92,17 @@ export function DataTable() {
           }
           className="max-w-sm"
         />
+
+<Button
+      onClick={() => {
+        if (!publicKey) return alert("Connect wallet first");
+        sendBulkSOL(connection, publicKey, sendTransaction)
+          .then(sig => alert("Bulk tx sent: " + sig))
+          .catch(err => console.error(err));
+      }} className="cursor-pointer"
+    >
+      Send Bulk SOL
+    </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
